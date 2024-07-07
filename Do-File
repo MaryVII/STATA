@@ -1,0 +1,119 @@
+##TASK 1 – Do File
+
+*1.a.i) Estimate effect of smoking on risk of death
+logit death smoking
+logistic death smoking
+*1.a.ii) predicted probability graph
+logit death i.smoking age
+margins smoking, at (age=(10(10)70)) atmeans vsquish post
+marginsplot
+
+*1.b) Linearity assumption / statistical test / decide which is best model
+logistic death i.smoking i.age
+logistic death i.smoking age
+logistic death i.smoking
+est store model_1
+logistic death i.smoking age
+est store model_2
+lrtest model_1 model_2
+testparm i.smoking
+
+*Linear Quadratic Model
+gen agesq=age*age
+logistic death smoking age agesq
+est store c
+quietly: logistic death smoking age
+est store e
+lrtest c e
+*1.c.i) Add systolic bp
+logistic death smoking age agesq i.sbpgrp
+
+*1.c.ii) statistical test
+quietly:logistic death smoking age agesq i.sbpgrp
+est store d
+lrtest e d
+
+##TASK 2 – Do File
+*2.a) Describe variables
+describe
+codebook
+tab covid pref, row chi
+sort pref
+by pref:sum age
+summarize, d
+
+*2.b) Describe bivariate relationship between 3 variable
+tab pref covid, col
+*2.c)Devise sutitable statistical model
+mlogit pref covid, rrr baseoutcome (3)
+
+*2.d) Make a graph (predicted Probabilities)
+mlogit pref covid,
+predict p_phone p_video_link p_text_chat
+tab p_phone covid
+graph bar p_phone p_video_link p_text_chat, over(covid)
+legend(label( 1 "Phone" 2"Video Link" 3"Text Chat"))
+
+*2.e)Adjust for patient age
+mlogit pref covid, rrr baseoutcome (3)
+est store model_3
+mlogit pref covid age, rrr baseoutcome (3)
+est store model_4
+lrtest model_3 model_4
+
+*2.f) Combined 2 variable // which is the best model
+*combined variable = 1
+*Text chat = 2
+gen pref1 = pref
+recode pref1 (1 2 = 1) (3 = 2)
+mlogit pref1 covid age, rrr baseoutcome (2)
+mlogit pref covid age, rrr baseoutcome(3)
+
+TASK 3 – Do File
+
+*3.a) Describe Data 
+describe 
+codebook
+summ fall - timedead
+tab1 limitil fall dead srh sex education
+drop if limitil==. // Drop missing data
+drop if education==.
+drop if srh==.
+sum timedead
+browse if timedead==0 // Browse for error
+drop if timedead==0
+tab dead fall, row chi
+tab dead sex, row chi
+tab dead agegp, row chi
+tab dead limitil, row chi
+tab dead education, row chi
+tab dead srh, row chi
+sort dead
+by dead:sum timedead
+sum timedead
+
+*3.b) Association
+stset timedead, failure(dead)
+stsum
+stsum, by(fall)
+stci, by(fall)
+sts test fall
+sts graph, by(fall) risktable xlabel(0(2)10) failure // Legend Edit in Graph Edit window
+
+*3.c) Adjusting for potential confounding factors
+stcox i.sex
+stcox i.agegp
+stcox i.limitil
+stcox i.education
+stcox i.srh
+stcox i.sex i.agegp limitil i.education i.srh
+
+*3.d) Check validity of assumption (A)
+stphplot, strata(sex) adjust(agegp limitil education srh)
+stphplot, strata(agegp) adjust(sex limitil education srh)
+stphplot, strata(limitil) adjust(sex agegp education srh)
+stphplot, strata(education) adjust(sex agegp limitil srh)
+stphplot, strata(srh) adjust(sex agegp limitil education)
+*Proportional hazard assumption (B)
+stcox i.sex i.agegp limitil i.srh i.education, schoenfeld(sc*) scaledsch(ssc*)
+estat phtest, log detail
