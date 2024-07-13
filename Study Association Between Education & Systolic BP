@@ -1,0 +1,397 @@
+# Study Association Between Education & Systolic Blood Pressure
+
+describe 
+
+codebook 
+
+ 
+
+*Drop missing data 
+
+drop if sex==. 
+
+drop if mi==. 
+
+drop if SBP==. 
+
+drop if alco==.  
+
+drop if binge==. 
+
+drop if material==. 
+
+drop if ht==. 
+
+drop if educ==. 
+
+drop if marital==. 
+
+drop if sports==. 
+
+drop if smoke==. 
+
+drop if econact==. 
+
+drop if agegp==. 
+
+ 
+
+*Check for data error 
+
+browse if SBP==0 
+
+drop if SBP==0 
+
+describe 
+
+codebook 
+
+ 
+
+*tabulate oneway 
+
+tab sex 
+
+tab mi 
+
+tab SBP 
+
+tab alco 
+
+tab binge 
+
+tab material  
+
+tab ht  
+
+tab educ  
+
+tab marital 
+
+tab sports  
+
+tab smoke  
+
+tab econact  
+
+tab agegp  
+
+ 
+
+ 
+
+//QUESTION 2a// 
+
+tab ht sex, row chi 
+
+tab ht mi, row chi 
+
+tab ht alco, row chi 
+
+tab ht binge, row chi 
+
+tab ht material, row chi 
+
+tab ht educ, row chi 
+
+tab ht marital, row chi 
+
+tab ht sports, row chi 
+
+tab ht smoke, row chi 
+
+tab ht econact, row chi 
+
+tab ht agegp, row chi 
+
+ 
+
+ 
+
+*odds ratio and 95% CI 
+
+tabodds ht sex 
+
+tabodds ht mi 
+
+tabodds ht alco 
+
+tabodds ht binge 
+
+tabodds ht material 
+
+tabodds ht educ 
+
+tabodds ht marital 
+
+tabodds ht sports 
+
+tabodds ht smoke 
+
+tabodds ht econact 
+
+tabodds ht agegp 
+
+ 
+
+ 
+
+//QUESTION 2b// 
+
+tab educ sex, row chi 
+
+tab educ mi, row chi 
+
+tab educ alco, row chi 
+
+tab educ binge, row chi 
+
+tab educ material, row chi 
+
+tab educ ht, row chi 
+
+tab educ marital, row chi 
+
+tab educ sports, row chi 
+
+tab educ smoke, row chi 
+
+tab educ econact, row chi 
+
+tab educ agegp, row chi 
+
+ 
+
+//QUESTION 3// 
+
+*check for crude* 
+
+mhodds ht educ  
+
+ 
+
+*M-H test  
+
+mhodds ht educ, by(sex) 
+
+mhodds ht educ, by(mi) 
+
+mhodds ht educ, by(alco) 
+
+mhodds ht educ, by(binge) 
+
+mhodds ht educ, by(material) 
+
+mhodds ht educ, by(marital) 
+
+mhodds ht educ, by(sports) 
+
+mhodds ht educ, by(smoke) 
+
+mhodds ht educ, by(econact) 
+
+mhodds ht educ, by(agegp) 
+
+ 
+
+//QUESTION 4// 
+
+*Check distribution of SBP* 
+
+histogram SBP // positively skewed 
+
+ 
+
+*Test of assumption 
+
+sdtest SBP, by(sex) // equal variance 
+
+sdtest SBP, by(mi) // equal varaince 
+
+sdtest SBP, by(binge) // equal variance 
+
+sdtest SBP, by(educ) // equal variance 
+
+sdtest SBP, by(econact) //equal variance 
+
+ 
+
+*T-test for SBP  
+
+ttest SBP, by(sex) 
+
+ttest SBP, by(mi) 
+
+ttest SBP, by(binge) 
+
+ttest SBP, by(ht) 
+
+ttest SBP, by(educ) 
+
+ttest SBP, by(econact) 
+
+ 
+
+*ANOVA 
+
+oneway SBP alco, tabulate 
+
+oneway SBP material, tabulate 
+
+oneway SBP marital, tabulate 
+
+oneway SBP sports, tabulate 
+
+oneway SBP smoke, tabulate 
+
+oneway SBP agegp, tabulate 
+
+ 
+
+ 
+
+//QUESTION 5// 
+
+*Check linearity 
+
+twoway(scatter SBP educ) 
+
+twoway(scatter SBP educ)(lfit SBP educ) 
+
+ 
+
+*Crude interaction 
+
+regress SBP educ 
+
+regress SBP i.educ 
+
+testparm SBP i.educ 
+
+ 
+
+*Adjusted for other factors 
+
+regress SBP i.sex i.educ  
+
+regress SBP i.sex##i.educ 
+
+testparm i.sex#i.educ 
+
+bysort sex:regress SBP i.educ 
+
+ 
+
+regress SBP i.mi i.educ  
+
+regress SBP i.mi##i.educ 
+
+testparm i.mi#i.educ 
+
+ 
+
+regress SBP i.alco i.educ  
+
+regress SBP i.alco##i.educ 
+
+testparm i.alco#i.educ 
+
+ 
+
+regress SBP i.binge i.educ  
+
+regress SBP i.binge##i.educ 
+
+testparm i.binge#i.educ 
+
+bysort binge:regress SBP i.educ 
+
+ 
+
+regress SBP i.material i.educ  
+
+regress SBP i.material##i.educ 
+
+testparm i.material#i.educ 
+
+ 
+
+regress SBP i.marital i.educ  
+
+regress SBP i.marital##i.educ 
+
+testparm i.marital#i.educ 
+
+bysort marital:regress SBP i.educ 
+
+ 
+
+regress SBP i.sports i.educ  
+
+regress SBP i.sports##i.educ 
+
+testparm i.sports#i.educ 
+
+ 
+
+regress SBP i.smoke i.educ  
+
+regress SBP i.smoke##i.educ 
+
+testparm i.smoke#i.educ 
+
+ 
+
+regress SBP i.econact i.educ  
+
+regress SBP i.econact##i.educ 
+
+testparm i.econact#i.educ 
+
+ 
+
+regress SBP i.agegp i.educ  
+
+regress SBP i.agegp##i.educ 
+
+testparm i.agegp#i.educ 
+
+ 
+
+*Test confounder* 
+
+regress SBP i.educ i.alco  
+
+regress SBP i.educ i.alco i.material  
+
+regress SBP i.educ i.alco i.material  
+
+regress SBP i.educ i.alco i.material i.sports 
+
+regress SBP i.educ i.alco i.material i.sports i.smoke  
+
+regress SBP i.educ i.alco i.material i.sports i.smoke i.econact  
+
+regress SBP i.educ i.alco i.material i.sports i.smoke i.econact i.agegp 
+
+ 
+
+*Testing effect modifier* 
+
+regress SBP i.educ i.alco i.material i.sports i.smoke i.econact i.agegp##i.sex 
+
+testparm SBP i.educ i.alco i.material i.sports i.smoke i.econact i.agegp#i.sex 
+
+ 
+
+regress SBP i.educ i.alco i.material i.sports i.smoke i.econact i.agegp##i.marital 
+
+testparm SBP i.educ i.alco i.material i.sports i.smoke i.econact i.agegp#i.marital 
+
+ 
+
+ 
+
+*Final model* 
+
+bysort sex marital:regress SBP i.educ i.alco i.material i.smoke i.sports i.econact i.agegp 
