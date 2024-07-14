@@ -37,14 +37,14 @@ Comparing Groups:
 T-tests: Compare means between two groups (independent or paired).
 ANOVA (Analysis of Variance): Compare means among three or more groups.
 Chi-Square Test: Test relationships between categorical variables.
-Correlation and Regression:
 
+Correlation and Regression:
 Pearson Correlation: Measure the strength and direction of the relationship between two continuous variables.
 Spearman Correlation: Measure the relationship between two ordinal variables or non-parametric data.
 Simple Linear Regression: Predict the value of a dependent variable based on an independent variable.
 Multiple Linear Regression: Predict the value of a dependent variable based on multiple independent variables.
-Advanced Statistical Methods:
 
+Advanced Statistical Methods:
 Logistic Regression: Predict a binary outcome.
 Factor Analysis: Identify underlying relationships between variables.
 Structural Equation Modeling (SEM): Examine complex relationships between variables, including latent variables.
